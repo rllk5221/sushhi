@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сакура Суши — доставка суши и роллов</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--rice:#fbfaf6;--nori:#1c2b25;--tuna:#c4262e;--wasabi:#86a93a;--ink:#2b2f2c;--line:#e4e0d6;--card:#fff;--muted:#6b706a}
+@media (prefers-color-scheme:dark){:root{--rice:#141a17;--nori:#e9efe9;--ink:#e3e8e3;--line:#2b3631;--card:#1b2420;--muted:#9aa49d}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;font-family:Manrope,system-ui,sans-serif;background:var(--rice);color:var(--ink);line-height:1.6}
+h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;color:var(--nori);line-height:1.2;margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--wasabi);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:20;background:var(--rice);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:20px;height:64px}
+.logo{font-family:Unbounded;font-weight:700;text-decoration:none;color:var(--tuna);font-size:18px}
+nav{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+nav a{text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600;font-size:15px}
+nav a:hover{background:var(--line)}
+.cart-btn{border:0;background:var(--nori);color:var(--rice);font:700 15px Manrope;padding:10px 16px;border-radius:10px;cursor:pointer}
+.cart-btn span{background:var(--tuna);color:#fff;border-radius:99px;padding:1px 8px;margin-left:6px}
+.hero{padding:64px 0 48px}
+.hero h1{font-size:clamp(30px,6vw,56px);max-width:14ch}
+.hero p{max-width:46ch;color:var(--muted);font-size:18px;margin:18px 0 26px}
+.btn{display:inline-block;border:0;background:var(--tuna);color:#fff;font:700 16px Manrope;padding:14px 24px;border-radius:10px;cursor:pointer;text-decoration:none}
+.btn:hover{filter:brightness(1.1)}
+.btn.alt{background:transparent;color:var(--nori);border:2px solid var(--nori)}
+section{padding:48px 0}
+section h2{font-size:clamp(24px,4vw,34px);margin-bottom:24px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 14px Manrope;padding:8px 16px;border-radius:99px;cursor:pointer}
+.tab[aria-pressed=true]{background:var(--nori);color:var(--rice);border-color:var(--nori)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column}
+.emoji{font-size:54px;line-height:1;margin-bottom:10px}
+.item h3{font-size:16px;margin-bottom:6px}
+.item p{margin:0 0 14px;color:var(--muted);font-size:14px;flex:1}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.price{font-weight:700;font-size:18px}
+.add{border:0;background:var(--wasabi);color:#17210a;font:700 14px Manrope;padding:9px 14px;border-radius:8px;cursor:pointer}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.facts{display:grid;gap:12px}
+.facts div{border-left:4px solid var(--tuna);padding-left:14px}
+.facts b{display:block;font-family:Unbounded;color:var(--nori)}
+form.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;max-width:560px}
+label{display:block;font-weight:600;font-size:14px;margin:0 0 14px}
+input,textarea{width:100%;margin-top:6px;padding:12px;border:1px solid var(--line);border-radius:8px;font:400 16px Manrope;background:var(--rice);color:var(--ink)}
+textarea{min-height:120px;resize:vertical}
+.msg{margin-top:14px;font-weight:600}
+.ok{color:var(--wasabi)}.err{color:var(--tuna)}
+footer{background:var(--nori);color:var(--rice);padding:48px 0 24px;margin-top:40px}
+@media (prefers-color-scheme:dark){footer{background:#0d1210;color:#e9efe9}}
+footer h3{color:inherit;font-size:16px;margin-bottom:12px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px}
+footer p,footer li{margin:0 0 6px;opacity:.85;font-size:14px}
+footer ul{list-style:none;padding:0;margin:0}
+.copy{border-top:1px solid #ffffff22;margin-top:28px;padding-top:16px;font-size:13px;opacity:.7}
+/* banners */
+.banners{--sw:min(1100px,82vw);--sh:calc(var(--sw)*.3);position:relative;overflow:hidden;padding:20px 0 6px}
+.btrack{display:flex;gap:24px;transition:transform .6s ease;will-change:transform}
+.slide{flex:0 0 var(--sw);aspect-ratio:10/3;border-radius:24px;overflow:hidden;color:#fff;display:flex;align-items:center;text-decoration:none;cursor:pointer;opacity:.4;transition:opacity .6s}
+.slide.on{opacity:1}
+.slide:focus-visible{outline-offset:-6px;outline-color:#fff}
+.slide .wrap{margin:0;max-width:none;width:100%;padding:0 clamp(20px,6vw,72px)}
+.slide h2{color:#fff;font-size:clamp(20px,4.4vw,48px);margin:0 0 8px}
+.slide p{margin:0;font-size:clamp(13px,1.8vw,20px);opacity:.95;max-width:30ch}
+.arrow{position:absolute;top:calc(20px + var(--sh)/2);transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:0;background:#ffffffe6;color:#1c2b25;font-size:26px;line-height:1;cursor:pointer;z-index:2;box-shadow:0 2px 10px #0003}
+.arrow:hover{background:#fff}
+.arrow.prev{left:calc(50% - var(--sw)/2 + 14px)}
+.arrow.next{right:calc(50% - var(--sw)/2 + 14px)}
+.dots{display:flex;justify-content:center;gap:8px;padding:14px 0 0}
+.dots button{width:10px;height:10px;border-radius:99px;border:0;background:var(--line);cursor:pointer;padding:0;transition:width .3s,background .3s}
+.dots button[aria-current=true]{background:var(--tuna);width:26px}
+@media(max-width:640px){.banners{--sw:88vw;--sh:calc(var(--sw)*.5)}.slide{aspect-ratio:2/1}.arrow{width:34px;height:34px;font-size:20px}}
+/* support widget */
+.fab{position:fixed;right:24px;bottom:24px;width:60px;height:60px;border-radius:50%;border:0;background:var(--tuna);color:#fff;cursor:pointer;z-index:25;display:grid;place-items:center;box-shadow:0 8px 24px #0004}
+.fab:hover{filter:brightness(1.1)}
+.chat{position:fixed;right:24px;bottom:96px;width:min(340px,calc(100vw - 32px));background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px #0003;padding:18px;z-index:25;display:none}
+.chat.open{display:block}
+.chat h3{font-size:16px}
+.chat label{margin-bottom:10px}
+.chat textarea{min-height:90px}
+.chat .btn{width:100%}
+/* pay page */
+.back{display:inline-block;margin-bottom:16px;font-weight:700;text-decoration:none;color:var(--tuna)}
+.back:hover{text-decoration:underline}
+input[aria-invalid=true]{border-color:var(--tuna)}
+#pform .btn{width:100%}
+#pform .btn+.btn{margin-top:10px}
+/* pictures */
+.pic{position:relative;border-radius:10px;overflow:hidden;margin-bottom:12px;aspect-ratio:10/7}
+.pic{background:var(--line)}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pic.nophoto{display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-weight:600;color:var(--muted)}
+.pic.nophoto img{display:none}
+.pic.nophoto::after{content:attr(data-name)}
+/* toast */
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--nori);color:var(--rice);padding:12px 20px;border-radius:10px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:40}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.bump{animation:bump .35s}
+@keyframes bump{50%{transform:scale(1.15)}}
+/* cart drawer */
+.shade{position:fixed;inset:0;background:#0007;z-index:30;display:none}
+.shade.open{display:block}
+aside{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--rice);z-index:31;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column;padding:20px}
+aside.open{transform:none}
+.lines{flex:1;overflow:auto;margin:16px 0}
+.line{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:28px;height:28px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-size:16px}
+.x{background:none;border:0;font-size:24px;cursor:pointer;color:var(--ink)}
+.total{display:flex;justify-content:space-between;font-weight:700;font-size:20px;margin-bottom:14px}
+.empty{color:var(--muted);text-align:center;padding:40px 0}
+/* pay page */
+#pay{display:none}
+.paygrid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.sum{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.sum .r{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.about,.paygrid{grid-template-columns:1fr}nav{display:none}.cart-btn{margin-left:auto}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a href="#top" class="logo">Сакура Суши</a>
+    <nav aria-label="Быстрый доступ">
+      <a href="#menu">Меню</a>
+      <a href="#about">О нас</a>
+      <a href="#delivery">Доставка</a>
+      <a href="#support" onclick="openChat(event)">Поддержка</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <button class="cart-btn" id="openCart" aria-label="Открыть корзину">Корзина<span id="count">0</span></button>
+  </div>
+</header>
+
+<div class="banners" id="banners" aria-roledescription="карусель" aria-label="Акции и комбо">
+  <div class="btrack" id="btrack">
+    <a class="slide" href="#menu" data-cat="Сеты" style="background:linear-gradient(90deg,#000b 0%,#0006 55%,#0002 100%),url(photos/banner-combo.jpg) center/cover,#c4262e"><div class="wrap"><div><h2>Комбо «Сакура»</h2><p>Сет на 24 штуки + 2 лимонада — 1 790 ₽ вместо 2 000 ₽</p></div></div></a>
+    <a class="slide" href="#menu" data-cat="Роллы" style="background:linear-gradient(90deg,#000b 0%,#0006 55%,#0002 100%),url(photos/banner-2plus1.jpg) center/cover,#1c2b25"><div class="wrap"><div><h2>Акция 2+1</h2><p>Закажите два ролла — третий в подарок по будням до 16:00</p></div></div></a>
+    <a class="slide" href="#menu" data-cat="Все" style="background:linear-gradient(90deg,#000b 0%,#0006 55%,#0002 100%),url(photos/banner-delivery.jpg) center/cover,#4f6d1a"><div class="wrap"><div><h2>Бесплатная доставка</h2><p>При заказе от 2 500 ₽ привезём бесплатно за 45 минут</p></div></div></a>
+    <a class="slide" href="#menu" data-cat="Сеты" style="background:linear-gradient(90deg,#000b 0%,#0006 55%,#0002 100%),url(photos/banner-tea.jpg) center/cover,#7a1f5c"><div class="wrap"><div><h2>Чай в подарок</h2><p>К каждому сету «Самурай» добавляем чайник зелёного чая</p></div></div></a>
+  </div>
+  <button class="arrow prev" id="bprev" aria-label="Предыдущий баннер">‹</button>
+  <button class="arrow next" id="bnext" aria-label="Следующий баннер">›</button>
+  <div class="dots" id="bdots"></div>
+</div>
+
+<main id="top">
+<div id="shop">
+  <div class="wrap hero">
+    <h1>Свежие суши с доставкой за 45 минут</h1>
+    <p>Готовим из охлаждённой рыбы и свежего риса. Привозим тёплыми по рису и холодными по рыбе.</p>
+    <a class="btn" href="#menu">Выбрать блюда</a>
+  </div>
+
+  <section id="menu"><div class="wrap">
+    <h2>Меню</h2>
+    <div class="tabs" id="tabs" role="group" aria-label="Категории"></div>
+    <div class="grid" id="grid"></div>
+  </div></section>
+
+    <section id="about"><div class="wrap">
+    <h2>О нас</h2>
+    <div class="about">
+      <div>
+        <p>«Сакура Суши» — семейная кухня с доставкой по городу. Мы открылись в 2018 году в маленьком помещении с двумя поварами. Сейчас у нас работает команда из 14 человек, но подход остался прежним: рыбу принимаем каждое утро, рис варим по партиям, роллы собираем после заказа.</p>
+        <p>Мы не используем замороженные полуфабрикаты и не держим готовые роллы «про запас».</p>
+      </div>
+      <div class="facts">
+        <div><b>45 минут</b>среднее время доставки</div>
+        <div><b>Каждое утро</b>новая поставка рыбы</div>
+        <div><b>Бесплатно</b>доставка от 2 500 ₽</div>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="delivery"><div class="wrap">
+    <h2>Доставка и оплата</h2>
+    <p>Доставляем ежедневно с 10:00 до 23:00. Минимальный заказ — 1 000 ₽. Оплата картой на сайте или наличными курьеру.</p>
+  </div></section>
+</div>
+
+<div id="pay"><div class="wrap" style="padding-top:32px;padding-bottom:40px">
+  <a class="back" href="#menu">← Назад в меню</a>
+  <h2 style="margin-bottom:24px">Оплата заказа</h2>
+  <div class="paygrid">
+    <form class="box" id="pform" novalidate style="max-width:none">
+      <label>Имя<input name="n" required autocomplete="name" autocapitalize="words" placeholder="Иван Иванов"></label>
+      <label>Телефон<input name="t" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+7 (900) 000-00-00"></label>
+      <label>Адрес доставки<input name="a" required autocomplete="street-address" placeholder="Улица, дом, квартира"></label>
+      <label>Номер карты<input name="c" inputmode="numeric" autocomplete="cc-number" maxlength="19" placeholder="0000 0000 0000 0000" required></label>
+      <div class="two">
+        <label>Срок действия<input name="d" inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="ММ/ГГ" required></label>
+        <label>CVC<input name="v" inputmode="numeric" autocomplete="cc-csc" maxlength="3" placeholder="000" required></label>
+      </div>
+      <button class="btn" type="submit" id="paybtn">Оплатить</button>
+      <button class="btn alt" type="button" onclick="location.hash='#menu'">Вернуться в меню</button>
+      <div class="msg" id="pmsg" role="status"></div>
+    </form>
+    <div class="sum"><h3 style="margin-bottom:12px">Ваш заказ</h3><div id="sumlines"></div>
+      <div class="total" style="margin:14px 0 0"><span>Итого</span><span id="sumtotal"></span></div></div>
+  </div>
+</div></div>
+</main>
+
+<button class="fab" id="fab" aria-label="Поддержка" aria-expanded="false" aria-controls="chat"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg></button>
+<div class="chat" id="chat" role="dialog" aria-label="Поддержка">
+  <div class="row"><h3>Поддержка</h3><button class="x" id="chatClose" aria-label="Закрыть">×</button></div>
+  <p style="margin:6px 0 14px;color:var(--muted);font-size:14px">Задайте вопрос, мы ответим на почту.</p>
+  <form id="sform" novalidate>
+    <label>Имя<input name="name" type="text" autocomplete="name" required></label>
+    <label>Почта<input name="email" type="email" autocomplete="email" required></label>
+    <label>Сообщение<textarea name="message" required></textarea></label>
+    <button class="btn" type="submit">Отправить</button>
+    <div class="msg" id="smsg" role="status"></div>
+  </form>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div class="shade" id="shade"></div>
+<aside id="drawer" aria-label="Корзина" aria-hidden="true">
+  <div class="row"><h2 style="font-size:22px;margin:0">Корзина</h2><button class="x" id="closeCart" aria-label="Закрыть">×</button></div>
+  <div class="lines" id="lines"></div>
+  <div class="total"><span>Итого</span><span id="total">0 ₽</span></div>
+  <button class="btn" id="checkout">Перейти к оплате</button>
+</aside>
+
+<footer id="contacts"><div class="wrap">
+  <div class="fgrid">
+    <div><h3>Сакура Суши</h3><p>Доставка суши, роллов и сетов. Свежая рыба, рис, собранный после заказа.</p></div>
+    <div><h3>Контакты</h3><ul><li>Телефон: +7 (900) 000-00-00</li><li>Почта: hello@sakura-sushi.example</li><li>Адрес: ул. Ленина, 1, Москва</li></ul></div>
+    <div><h3>Часы работы</h3><ul><li>Пн–Чт: 10:00–23:00</li><li>Пт–Вс: 10:00–00:00</li></ul></div>
+    <div><h3>Разделы</h3><ul><li><a href="#menu">Меню</a></li><li><a href="#about">О нас</a></li><li><a href="#support" onclick="openChat(event)">Поддержка</a></li></ul></div>
+  </div>
+  <div class="copy">© 2026 Сакура Суши. Все права защищены.</div>
+</div></footer>
+
+<script>
+const MENU=[
+ {id:1,cat:"Роллы",name:"Филадельфия",desc:"Лосось, сливочный сыр, огурец",price:590,img:"photos/Phil.jpg"},
+ {id:2,cat:"Роллы",name:"Калифорния",desc:"Краб, авокадо, икра масаго",price:520,img:"photos/Kali.jpg"},
+ {id:3,cat:"Роллы",name:"Дракон",desc:"Угорь, авокадо, соус унаги",price:690,img:"photos/Drakon.jpg"},
+ {id:4,cat:"Суши",name:"Сяке",desc:"Рис, мицукан, сахар, комбу, соль, слабосолёный лосось",price:260,img:"photos/sake.jpg"},
+ {id:5,cat:"Суши",name:"Бекон Унаги",desc:"Бекон, огурец, сыр сливочный, рис, нори, лук фри, соус унаги, мицукан, сахар, комбу, соль",price:290,img:"photos/bekon.jpg"},
+ {id:6,cat:"Суши",name:"Лосось гункан запечённый",desc:"Рис, мицукан, сахар, комбу, соль, нори, слабосолёный лосось, соль, сыр гауда, майонез, паста кимчи",price:340,img:"photos/gu.jpg"},
+ {id:7,cat:"Сеты",name:"Сет «Сакура»",desc:"Лава Сяке, Запечённый с жареным лососем, Лосось с тобико оранж",price:1590,img:"photos/set-sakura.jpg"},
+ {id:8,cat:"Сеты",name:"Сет «Самурай»",desc:"40 шт. для компании",price:2490,img:"photos/set-samurai.jpg"},
+ {id:9,cat:"Напитки",name:"Зелёный чай",desc:"Чайник 500 мл",price:190,img:"photos/green-tea.jpg"},
+ {id:10,cat:"Напитки",name:"Лимонад юдзу",desc:"0,33 л",price:220,img:"photos/lemonade.jpg"}
+];
+/* Фотографии блюд лежат в папке photos рядом с этим файлом (имена указаны в поле img). */
+function pic(i){return `<div class="pic" data-name="${i.name}"><img src="${i.img}" alt="${i.name}" loading="lazy" onerror="this.parentNode.classList.add('nophoto')"></div>`}
+const cats=["Все",...new Set(MENU.map(i=>i.cat))];
+let cart={},cat="Все";
+try{cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
+const $=id=>document.getElementById(id);
+const money=n=>Math.round(n).toLocaleString("ru-RU")+" ₽";
+const save=()=>{try{localStorage.setItem("cart",JSON.stringify(cart))}catch(e){}};
+
+function renderMenu(){
+  $("tabs").innerHTML=cats.map(c=>`<button class="tab" aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("");
+  $("grid").innerHTML=MENU.filter(i=>cat==="Все"||i.cat===cat).map(i=>
+   `<article class="item">${pic(i)}<h3>${i.name}</h3><p>${i.desc}</p>
+    <div class="row"><span class="price">${money(i.price)}</span><button class="add" data-id="${i.id}">В корзину</button></div></article>`).join("");
+}
+$("tabs").onclick=e=>{const c=e.target.dataset.c;if(c){cat=c;renderMenu()}};
+let tt;
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("show"),1600)}
+$("grid").onclick=e=>{
+  const id=e.target.dataset.id;
+  if(!id)return;
+  cart[id]=(cart[id]||0)+1;renderCart();
+  const c=$("count");c.classList.remove("bump");void c.offsetWidth;c.classList.add("bump");
+  toast("Добавлено: "+MENU.find(m=>m.id==id).name);
+};
+
+function items(){return Object.keys(cart).map(id=>({...MENU.find(m=>m.id==id),q:cart[id]}))}
+function sum(){return items().reduce((s,i)=>s+i.price*i.q,0)}
+function renderCart(){
+  const list=items();save();
+  $("count").textContent=list.reduce((s,i)=>s+i.q,0);
+  $("total").textContent=money(sum());
+  $("lines").innerHTML=list.length?list.map(i=>
+   `<div class="line"><b>${i.name}</b><span>${money(i.price*i.q)}</span>
+    <div class="qty"><button data-m="${i.id}" aria-label="Меньше">−</button><span>${i.q}</span><button data-p="${i.id}" aria-label="Больше">+</button></div></div>`).join("")
+   :`<div class="empty">Корзина пуста. Добавьте что-нибудь из меню.</div>`;
+  $("checkout").disabled=!list.length;$("checkout").style.opacity=list.length?1:.5;
+}
+$("lines").onclick=e=>{
+  const m=e.target.dataset.m,p=e.target.dataset.p;
+  if(p)cart[p]++;
+  if(m){cart[m]--;if(cart[m]<=0)delete cart[m]}
+  renderCart();
+};
+function openCart(){$("drawer").classList.add("open");$("shade").classList.add("open");$("drawer").setAttribute("aria-hidden","false")}
+function closeCart(){$("drawer").classList.remove("open");$("shade").classList.remove("open");$("drawer").setAttribute("aria-hidden","true")}
+$("openCart").onclick=openCart;$("closeCart").onclick=closeCart;$("shade").onclick=closeCart;
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCart()});
+
+$("checkout").onclick=()=>{if(items().length){closeCart();location.hash="#/pay"}};
+
+function route(){
+  const isPay=location.hash==="#/pay";
+  if(isPay&&!items().length){history.replaceState(null,"",location.pathname+location.search);return route()}
+  $("pay").style.display=isPay?"block":"none";
+  $("shop").style.display=isPay?"none":"block";
+  $("banners").style.display=isPay?"none":"";
+  closeCart();
+  if(isPay){
+    $("sumlines").innerHTML=items().map(i=>`<div class="r"><span>${i.name} × ${i.q}</span><span>${money(i.price*i.q)}</span></div>`).join("");
+    $("sumtotal").textContent=money(sum());
+    window.scrollTo(0,0);
+  }else{
+    layoutB(false);
+    try{const t=location.hash.length>1&&document.querySelector(location.hash);if(t)t.scrollIntoView()}catch(e){}
+  }
+}
+window.addEventListener("hashchange",route);
+
+/* Маски ввода на странице оплаты */
+const dig=v=>v.replace(/\D/g,"");
+(function(f){
+  f.n.addEventListener("input",e=>{e.target.value=e.target.value.replace(/[^A-Za-zА-Яа-яЁё\s'.-]/g,"")});
+  f.t.addEventListener("input",e=>{
+    let d=dig(e.target.value);if(/^[78]/.test(d))d=d.slice(1);d=d.slice(0,10);
+    let o="";if(d.length)o="+7 ("+d.slice(0,3);if(d.length>3)o+=") "+d.slice(3,6);if(d.length>6)o+="-"+d.slice(6,8);if(d.length>8)o+="-"+d.slice(8,10);
+    e.target.value=o;
+  });
+  f.c.addEventListener("input",e=>{e.target.value=dig(e.target.value).slice(0,16).replace(/(.{4})(?=.)/g,"$1 ")});
+  f.d.addEventListener("input",e=>{
+    let d=dig(e.target.value).slice(0,4);
+    if(d.length===1&&d>"1")d="0"+d;
+    if(d.length>=2){const m=+d.slice(0,2);if(m===0||m>12)d=d[0]+d.slice(2,0)}
+    const del=(e.inputType||"").startsWith("delete");
+    e.target.value=(d.length>2||(d.length===2&&!del))?d.slice(0,2)+"/"+d.slice(2):d;
+  });
+  f.v.addEventListener("input",e=>{e.target.value=dig(e.target.value).slice(0,3)});
+  [...f.elements].forEach(el=>el.addEventListener("input",()=>el.removeAttribute("aria-invalid")));
+  f.onsubmit=e=>{
+    e.preventDefault();
+    const m=$("pmsg"),errs=[];
+    const bad=(el,t)=>{el.setAttribute("aria-invalid","true");errs.push([el,t])};
+    if(f.n.value.trim().length<2)bad(f.n,"Введите имя.");
+    if(dig(f.t.value).length!==11)bad(f.t,"Введите номер телефона полностью: +7 (000) 000-00-00.");
+    if(f.a.value.trim().length<5)bad(f.a,"Укажите адрес доставки.");
+    if(dig(f.c.value).length!==16)bad(f.c,"Номер карты должен содержать 16 цифр.");
+    const dv=f.d.value,now=new Date();
+    const mm=+dv.slice(0,2),yy=2000+(+dv.slice(3));
+    if(!/^\d\d\/\d\d$/.test(dv)||mm<1||mm>12||yy<now.getFullYear()||(yy===now.getFullYear()&&mm<now.getMonth()+1))bad(f.d,"Проверьте срок действия карты (ММ/ГГ).");
+    if(f.v.value.length!==3)bad(f.v,"CVC — это 3 цифры на обороте карты.");
+    if(errs.length){m.className="msg err";m.textContent=errs[0][1];errs[0][0].focus();return}
+    /* Здесь подключается платёжный сервис (Stripe, ЮKassa и т. д.) */
+    m.className="msg ok";m.textContent="Заказ оформлен. Курьер приедет в течение 45 минут.";
+    cart={};renderCart();f.reset();
+  };
+})($("pform"));
+
+/* Поддержка */
+function openChat(e){if(e)e.preventDefault();setChat(true)}
+function setChat(on){$("chat").classList.toggle("open",on);$("fab").setAttribute("aria-expanded",on);if(on)$("sform").name.focus()}
+$("fab").onclick=()=>setChat(!$("chat").classList.contains("open"));
+$("chatClose").onclick=()=>{setChat(false);$("fab").focus()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")setChat(false)});
+
+$("sform").onsubmit=e=>{
+  e.preventDefault();
+  const f=e.target,m=$("smsg");
+  const ok=f.name.value.trim()&&/^\S+@\S+\.\S+$/.test(f.email.value)&&f.message.value.trim();
+  if(!ok){m.className="msg err";m.textContent="Введите имя, корректную почту и сообщение.";return}
+  /* Здесь отправка на сервер: fetch('/api/support', {method:'POST', body: JSON.stringify({...})}) */
+  m.className="msg ok";m.textContent="Спасибо, "+f.name.value.trim()+"! Ответим на "+f.email.value.trim()+" в течение дня.";
+  f.reset();
+};
+
+/* Карусель баннеров: клонируем слайды, чтобы по краям всегда были соседние */
+const track=$("btrack"),orig=[...track.children],N=orig.length;
+const pre=orig.map(x=>x.cloneNode(true)),post=orig.map(x=>x.cloneNode(true));
+[...pre,...post].forEach(c=>{c.setAttribute("aria-hidden","true");c.tabIndex=-1});
+pre.forEach(c=>track.insertBefore(c,orig[0]));post.forEach(c=>track.appendChild(c));
+const all=[...track.children];let p=N,bt;
+$("bdots").innerHTML=orig.map((_,k)=>`<button data-k="${k}" aria-label="Баннер ${k+1}"></button>`).join("");
+function layoutB(anim){
+  const w=all[0].offsetWidth;if(!w)return;
+  const g=parseFloat(getComputedStyle(track).columnGap)||0;
+  track.style.transition=anim?"":"none";
+  track.style.transform=`translateX(${$("banners").clientWidth/2-w/2-p*(w+g)}px)`;
+  if(!anim)void track.offsetWidth;
+  all.forEach((s,k)=>s.classList.toggle("on",k===p));
+  [...$("bdots").children].forEach((d,k)=>d.setAttribute("aria-current",k===((p%N)+N)%N));
+}
+function goB(n){p=Math.max(0,Math.min(3*N-1,n));layoutB(true)}
+track.addEventListener("transitionend",e=>{
+  if(e.target!==track)return;
+  if(p>=2*N||p<N){p=((p%N)+N)%N+N;layoutB(false)}
+});
+function autoB(){clearInterval(bt);if(!matchMedia("(prefers-reduced-motion: reduce)").matches)bt=setInterval(()=>goB(p+1),5000)}
+$("bprev").onclick=()=>{goB(p-1);autoB()};
+$("bnext").onclick=()=>{goB(p+1);autoB()};
+$("bdots").onclick=e=>{if(e.target.dataset.k){goB(N+ +e.target.dataset.k);autoB()}};
+$("banners").onmouseenter=()=>clearInterval(bt);
+$("banners").onmouseleave=autoB;
+track.onclick=e=>{const sl=e.target.closest(".slide");if(sl){cat=sl.dataset.cat;renderMenu()}};
+window.addEventListener("resize",()=>layoutB(false));
+autoB();
+
+renderMenu();renderCart();route();
+</script>
+</body>
+</html>
